@@ -51,6 +51,28 @@ export default defineConfig(async () => {
       : undefined,
     plugins: [
       vinext(),
+{
+  name: 'vinext-shims-single-chunk',
+  configEnvironment(name) {
+    if (name !== 'client') return;
+    return {
+      build: {
+        rolldownOptions: {
+          output: {
+            codeSplitting: {
+              groups: [
+                {
+                  name: 'vinext-shims',
+                  test: /[\\/]node_modules[\\/]vinext[\\/]dist[\\/]shims[\\/]/,
+                },
+              ],
+            },
+          },
+        },
+      },
+    };
+  },
+},
       sites(),
       cloudflare({
         viteEnvironment: { name: 'rsc', childEnvironments: ['ssr'] },
